@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TechMulti — Tin tức công nghệ đa nền tảng (HTML + CSS)</title>
+  <meta name="description" content="TechMulti - Tin tức công nghệ: AI, Mobile, Web, Cloud, IoT, Security. Phiên bản chỉ HTML & CSS, responsive, nhiều nội dung." />
+  <style>
+    /* ===========================
+       TechMulti - HTML + CSS only
+       - Không dùng JavaScript
+       - Carousel, tabs, mở rộng dùng checkbox/radio + CSS
+       - Responsive, nhiều nội dung & hình ảnh
+       =========================== */
+
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --muted:#556073;
+      --accent:#0ea5e9;
+      --accent2:#7c3aed;
+      --accent3:#f97316;
+      --radius:14px;
+      --maxw:1200px;
+      --shadow: 0 12px 30px rgba(2,6,23,0.08);
+      --glass: rgba(255,255,255,0.65);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg,var(--bg), #eef3fb);
+      color:#07203a;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.5;
+      padding:24px 12px;
+    }
+
+    .container{
+      max-width:var(--maxw);
+      margin:0 auto;
+    }
+
+    /* Top banner (marquee bằng CSS) */
+    .top-banner{
+      background: linear-gradient(90deg,var(--accent),var(--accent2));
+      color:#fff;
+      padding:10px 16px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .marquee-wrap{flex:1;overflow:hidden}
+    .marquee{
+      display:inline-block;
+      white-space:nowrap;
+      animation: marquee 18s linear infinite;
+      font-weight:700;
+    }
+    @keyframes marquee{
+      0%{transform:translateX(100%)}
+      100%{transform:translateX(-120%)}
+    }
+    .contact{
+      text-align:right;font-size:13px;min-width:210px;
+    }
+    .contact .hot{font-weight:800;color: #fff}
+
+    /* Header */
+    header{
+      margin-top:14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.8));
+      padding:14px 16px;border-radius:var(--radius);box-shadow:var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));
+      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:20px;
+      box-shadow: 0 10px 28px rgba(14,165,233,0.12);
+    }
+    .brand h1{font-size:20px;margin:0}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+
+    /* Search (pure CSS visual only) */
+    .search{
+      display:flex;gap:10px;align-items:center;
+    }
+    .search input{
+      padding:10px 12px;border-radius:999px;border:1px solid #e6eef7;width:300px;
+      outline:none;background:#fff;
+    }
+    .btn-sub{background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;padding:10px 14px;border-radius:10px;border:none;font-weight:700;cursor:pointer}
+
+    /* Categories nav */
+    .cats{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px}
+    .cats a{display:inline-block;padding:10px 14px;background:#fff;border-radius:12px;text-decoration:none;color:#042d48;font-weight:600;box-shadow:0 8px 22px rgba(2,6,23,0.04)}
+    .cats a:hover{transform:translateY(-6px);transition:all .18s}
+
+    /* Layout grid */
+    .layout{margin-top:18px;display:grid;grid-template-columns:2fr 1fr;gap:18px}
+
+    /* HERO - CSS-only carousel using radio inputs */
+    .hero{position:relative;border-radius:16px;overflow:hidden;display:grid;grid-template-columns:1fr 380px;min-height:280px;background:linear-gradient(180deg,#ffffff,#f8fbff);box-shadow:var(--shadow)}
+    /* hide radio buttons */
+    .carousel-input{display:none}
+
+    .slides{position:relative;padding:22px}
+    .slide{
+      position:absolute;inset:0;opacity:0;transform:translateX(12px);transition:all .6s ease;
+      display:flex;gap:16px;align-items:center;
+    }
+    .slide .meta{flex:1}
+    .slide h2{font-size:22px;margin:0;color:#052358}
+    .slide p{color:var(--muted);margin:8px 0 12px 0}
+    .tag{display:inline-block;padding:6px 10px;border-radius:999px;background:rgba(7,89,133,0.07);color:#075b8a;font-weight:700;font-size:12px;margin-bottom:8px}
+
+    /* position slides when corresponding radio is checked */
+    #c1:checked ~ .hero .s1,
+    #c2:checked ~ .hero .s2,
+    #c3:checked ~ .hero .s3 {opacity:1;transform:none;position:relative}
+
+    /* default to first slide (if no JS to check) using :first-of-type fallback */
+    .hero .s1{opacity:1;position:relative;transform:none}
+
+    .hero .thumb{padding:12px;background:linear-gradient(180deg,#fff,#f7fbff);display:flex;align-items:center;justify-content:center}
+    .hero .thumb img{width:100%;height:220px;object-fit:cover;border-radius:12px}
+
+    .hero-controls{position:absolute;left:24px;bottom:18px;display:flex;gap:8px}
+    .dot{
+      width:12px;height:12px;border-radius:99px;background:rgba(2,6,23,0.08);cursor:pointer;border:2px solid rgba(255,255,255,0.0);
+      transition:all .2s;
+    }
+    /* when radio checked, highlight dot via sibling selector */
+    #c1:checked ~ .hero .controls label[for="c1"],
+    #c2:checked ~ .hero .controls label[for="c2"],
+    #c3:checked ~ .hero .controls label[for="c3"]{
+      background:var(--accent);transform:scale(1.05)
+    }
+
+    /* Articles grid */
+    main.feed{display:flex;flex-direction:column;gap:16px}
+    .articles{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .card{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:transform .18s;display:flex;flex-direction:column}
+    .card:hover{transform:translateY(-8px)}
+    .card .img{width:100%;height:180px;object-fit:cover;display:block}
+    .card .content{padding:14px}
+    .kicker{font-size:12px;color:var(--accent);font-weight:800;margin-bottom:8px}
+    .card h3{margin:0 0 8px 0;color:#052358;font-size:17px}
+    .card p{margin:0;color:var(--muted);font-size:14px}
+    .meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--muted);margin-top:12px}
+
+    /* big feature */
+    .feature{display:flex;gap:16px;align-items:center;background:linear-gradient(180deg,#fff,#f8fbff);padding:18px;border-radius:12px;box-shadow:var(--shadow)}
+    .feature img{width:48%;height:220px;object-fit:cover;border-radius:10px}
+    .feature .txt{flex:1}
+
+    /* sidebar widgets */
+    aside.sidebar{display:flex;flex-direction:column;gap:14px}
+    .widget{background:var(--card);padding:14px;border-radius:12px;box-shadow:var(--shadow)}
+    .widget h4{margin:0 0 8px 0;color:#052358}
+    .trend-list{list-style:none;padding:0;margin:0}
+    .trend-list li{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed #eef4fb}
+    .trend-list img{width:68px;height:48px;object-fit:cover;border-radius:8px}
+    .small{font-size:13px;color:var(--muted)}
+
+    /* newsletter */
+    .newsletter input{width:100%;padding:12px;border-radius:8px;border:1px solid #e6eef7;margin-bottom:10px}
+    .newsletter button{width:100%;padding:12px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--accent),var(--accent2));color:#fff;font-weight:800;cursor:pointer}
+
+    /* footer */
+    footer{margin-top:18px;padding:16px;border-radius:12px;background:linear-gradient(90deg,#052358,#0ea5e9);color:#fff;text-align:center;box-shadow:var(--shadow)}
+    footer .links{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+    footer a{color:#fff;text-decoration:none;font-weight:700}
+
+    /* responsive */
+    @media (max-width: 980px){
+      .layout{grid-template-columns:1fr;gap:12px}
+      .hero{grid-template-columns:1fr;min-height:200px}
+      .hero .thumb img{height:160px}
+      .articles{grid-template-columns:1fr}
+      .search input{width:160px}
+    }
+    @media (max-width:520px){
+      body{padding:12px}
+      .brand h1{font-size:18px}
+      .search input{width:110px}
+      .marquee{font-size:13px}
+    }
+
+    /* small appear animation */
+    .fade{opacity:0;transform:translateY(8px);animation:fadeIn .7s forwards}
+    .fade.delay1{animation-delay:.08s}
+    .fade.delay2{animation-delay:.16s}
+    .fade.delay3{animation-delay:.24s}
+    @keyframes fadeIn{to{opacity:1;transform:none}}
+
+    /* utility */
+    .muted{color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- TOP BANNER -->
+    <div class="top-banner fade">
+      <div class="marquee-wrap">
+        <div class="marquee">🔥 TechMulti cập nhật • Hội thảo DevFest VN 2025 • AI, Mobile, Cloud, IoT — Đăng ký nhận bản tin hàng tuần!</div>
+      </div>
+      <div class="contact">
+        <div class="hot">Hotline: 0988 999 555</div>
+        <div class="addr muted">Khoa CNTT - Đại học Đại Nam</div>
+      </div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="fade delay1" role="banner">
+      <div class="brand">
+        <div class="logo">TM</div>
+        <div>
+          <h1>TechMulti</h1>
+          <p>Tin tức công nghệ đa nền tảng — AI • Mobile • Cloud • IoT • Security</p>
+        </div>
+      </div>
+
+      <div class="search" role="search">
+        <input placeholder="Tìm bài viết, tác giả, chủ đề..." aria-label="Tìm kiếm" />
+        <button class="btn-sub">Tìm</button>
+      </div>
+    </header>
+
+    <!-- CATEGORIES -->
+    <nav class="cats fade delay2" aria-label="Danh mục">
+      <a href="#">Tất cả</a>
+      <a href="#">AI & ML</a>
+      <a href="#">Mobile</a>
+      <a href="#">Web / Frontend</a>
+      <a href="#">Backend & Cloud</a>
+      <a href="#">IoT</a>
+      <a href="#">Security</a>
+      <a href="#">Phần cứng</a>
+      <a href="#">Đánh giá</a>
+    </nav>
+
+    <!-- LAYOUT -->
+    <div class="layout">
+
+      <!-- MAIN FEED -->
+      <main class="feed">
+
+        <!-- radio inputs for carousel -->
+        <input type="radio" name="carousel" id="c1" class="carousel-input" checked>
+        <input type="radio" name="carousel" id="c2" class="carousel-input">
+        <input type="radio" name="carousel" id="c3" class="carousel-input">
+
+        <!-- HERO -->
+        <section class="hero fade delay3" aria-label="Bài nổi bật">
+
+          <div class="slides">
+            <div class="slide s1">
+              <div class="meta">
+                <span class="tag">AI • Xu hướng</span>
+                <h2>AI chuyên dụng + chip: Thay đổi tương lai mọi nền tảng</h2>
+                <p>Các công ty phần cứng và startup tối ưu thuật toán cùng thiết kế chip để tăng hiệu năng cho ứng dụng AI trên mobile, edge và server.</p>
+                <div style="display:flex;gap:10px;margin-top:8px">
+                  <a class="btn-sub" href="#">Đọc chi tiết</a>
+                  <a style="padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #eef3fb;color:#052358;font-weight:700;text-decoration:none" href="#">Tải PDF</a>
+                </div>
+              </div>
+              <div class="thumb">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=900&q=60" alt="AI chip">
+              </div>
+            </div>
+
+            <div class="slide s2">
+              <div class="meta">
+                <span class="tag">Mobile • Review</span>
+                <h2>Top smartphone đa nền tảng 2025: Hiệu năng, pin và camera</h2>
+                <p>So sánh những smartphone phù hợp cho developer, creator và người dùng chuyên nghiệp trong môi trường đa nền tảng.</p>
+                <div style="display:flex;gap:10px;margin-top:8px">
+                  <a class="btn-sub" href="#">Xem so sánh</a>
+                  <a style="padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #eef3fb;color:#052358;font-weight:700;text-decoration:none" href="#">So sánh nhanh</a>
+                </div>
+              </div>
+              <div class="thumb">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=60" alt="smartphone">
+              </div>
+            </div>
+
+            <div class="slide s3">
+              <div class="meta">
+                <span class="tag">Cloud • DevOps</span>
+                <h2>Kiến trúc đa nền tảng: Cloud, Edge & On-Prem</h2>
+                <p>Thiết kế hệ thống hybrid: containers, orchestration, observability và cách tối ưu chi phí cho doanh nghiệp.</p>
+                <div style="display:flex;gap:10px;margin-top:8px">
+                  <a class="btn-sub" href="#">Tìm hiểu</a>
+                  <a style="padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #eef3fb;color:#052358;font-weight:700;text-decoration:none" href="#">Case study</a>
+                </div>
+              </div>
+              <div class="thumb">
+                <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=900&q=60" alt="cloud infra">
+              </div>
+            </div>
+          </div>
+
+          <!-- right thumbnail area (static decorative image) -->
+          <div style="display:flex;align-items:center;justify-content:center;padding:12px;background:linear-gradient(180deg,#fff,#f7fbff)">
+            <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=700&q=60" alt="tech collage" style="width:100%;height:220px;object-fit:cover;border-radius:12px">
+          </div>
+
+          <!-- controls using labels -->
+          <div class="controls" style="position:absolute;left:18px;bottom:14px;display:flex;gap:8px">
+            <label for="c1" class="dot" title="Slide 1"></label>
+            <label for="c2" class="dot" title="Slide 2"></label>
+            <label for="c3" class="dot" title="Slide 3"></label>
+          </div>
+
+        </section>
+
+        <!-- ARTICLES GRID -->
+        <section class="articles">
+          <article class="card fade">
+            <img class="img" src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=900&q=60" alt="AI healthcare">
+            <div class="content">
+              <div class="kicker">AI • Y tế</div>
+              <h3>AI trong y tế: Chẩn đoán ảnh và đạo đức dữ liệu</h3>
+              <p>Ứng dụng học sâu trong phân tích X-ray, MRI... cần dữ liệu chất lượng và khung pháp lý đảm bảo quyền riêng tư.</p>
+              <div class="meta"><span class="small">Minh Khoa • 2 giờ trước</span><span class="small">5 phút đọc</span></div>
+            </div>
+          </article>
+
+          <article class="card fade delay1">
+            <img class="img" src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=60" alt="laptop">
+            <div class="content">
+              <div class="kicker">Phần cứng</div>
+              <h3>Laptop cho developer 2025: ARM hay x86?</h3>
+              <p>So sánh khả năng tương thích phần mềm, hiệu năng biên dịch và thời lượng pin giữa hai nền tảng.</p>
+              <div class="meta"><span class="small">Lan Anh • 1 ngày</span><span class="small">7 phút đọc</span></div>
+            </div>
+          </article>
+
+          <article class="card fade delay2">
+            <img class="img" src="https://images.unsplash.com/photo-1526378723026-0fb5a9b98c61?auto=format&fit=crop&w=900&q=60" alt="IoT sensors">
+            <div class="content">
+              <div class="kicker">IoT • Smart Home</div>
+              <h3>An toàn cho hệ sinh thái IoT tại nhà</h3>
+              <p>Cách chọn gateway, chuẩn kết nối và cập nhật OTA đảm bảo an toàn cho hệ thống.</p>
+              <div class="meta"><span class="small">Hữu Trí • 3 ngày</span><span class="small">6 phút đọc</span></div>
+            </div>
+          </article>
+
+          <article class="card fade delay3">
+            <img class="img" src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=900&q=60" alt="security">
+            <div class="content">
+              <div class="kicker">Security</div>
+              <h3>Checklist bảo mật cho ứng dụng web đa nền tảng</h3>
+              <p>Các kiểm tra từ XSS, CSRF đến cấu hình CORS trước khi deploy sang production.</p>
+              <div class="meta"><span class="small">Quốc Huy • 4 ngày</span><span class="small">9 phút đọc</span></div>
+            </div>
+          </article>
+        </section>
+
+        <!-- FEATURE LONGFORM -->
+        <section class="feature fade delay2">
+          <img src="https://images.unsplash.com/photo-1509395176047-4a66953fd231?auto=format&fit=crop&w=900&q=60" alt="case study">
+          <div class="txt">
+            <h3>Case study: Xây dựng sản phẩm đa nền tảng cho startup</h3>
+            <p class="small">Từ kiến trúc backend, API đa nền tảng, đến trải nghiệm UI/UX thống nhất giữa web và mobile — bài viết phân tích thực tiễn và bài học triển khai.</p>
+            <p style="margin-top:10px;color:var(--muted)">Bài viết chứa blueprint kiến trúc, ví dụ code mẫu (tham khảo), và chiến lược CI/CD để vận hành sản phẩm tại quy mô người dùng thực tế.</p>
+            <div style="margin-top:12px;display:flex;gap:10px">
+              <a class="btn-sub" href="#">Đọc chuyên sâu</a>
+              <a style="padding:10px 12px;border-radius:10px;background:#fff;border:1px solid #eef3fb;color:#052358;font-weight:700;text-decoration:none" href="#">Tải báo cáo</a>
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- SIDEBAR -->
+      <aside class="sidebar">
+
+        <div class="widget fade">
+          <h4>Tin nóng</h4>
+          <ul class="trend-list">
+            <li>
+              <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=400&q=60" alt="">
+              <div>
+                <div style="font-weight:700">GeminiX: AI thế hệ mới?</div>
+                <div class="small">2 giờ • AI</div>
+              </div>
+            </li>
+            <li>
+              <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=60" alt="">
+              <div>
+                <div style="font-weight:700">Windows AI tích hợp sẵn</div>
+                <div class="small">5 giờ • OS</div>
+              </div>
+            </li>
+            <li>
+              <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=400&q=60" alt="">
+              <div>
+                <div style="font-weight:700">Tối ưu chi phí cloud</div>
+                <div class="small">Hôm qua • Cloud</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="widget newsletter fade delay1">
+          <h4>Đăng ký nhận bản tin</h4>
+          <p class="small">Nhận email hàng tuần với các bài nổi bật và tài nguyên miễn phí.</p>
+          <input placeholder="Email của bạn" type="email" aria-label="Email" />
+          <button>Đăng ký</button>
+        </div>
+
+        <div class="widget fade delay2">
+          <h4>Series hướng dẫn</h4>
+          <ul style="padding-left:12px;color:var(--muted);margin:6px 0 0 0">
+            <li style="margin-bottom:8px">• API đa nền tảng với Node.js</li>
+            <li style="margin-bottom:8px">• Thiết kế UI responsive cho mobile & desktop</li>
+            <li style="margin-bottom:8px">• CI/CD cho microservices</li>
+          </ul>
+        </div>
+
+        <div class="widget fade delay3">
+          <h4>Advertise</h4>
+          <p class="small">Hợp tác quảng cáo & nội dung tài trợ: <strong>ads@techmulti.vn</strong></p>
+        </div>
+
+      </aside>
+
+    </div> <!-- end layout -->
+
+    <!-- FOOTER -->
+    <footer>
+      <div style="font-weight:800;font-size:16px">TechMulti — Tin tức công nghệ đa nền tảng</div>
+      <div class="links" style="margin-top:8px">
+        <a href="#">Về chúng tôi</a>
+        <a href="#">Liên hệ</a>
+        <a href="#">Quảng cáo</a>
+        <a href="#">Chính sách</a>
+      </div>
+      <p style="opacity:0.95;margin-top:10px">© 2025 TechMulti • Thiết kế bởi Nhóm Sinh viên Khoa CNTT — Đại học Đại Nam</p>
+    </footer>
+
+  </div> <!-- container -->
+
+  <!-- =========================
+       LƯU Ý
+       - Toàn bộ chức năng tương tác (carousel) được làm bằng radio + label CSS.
+       - Không sử dụng JavaScript.
+       - Nếu bạn muốn autoplay carousel bằng CSS, có thể thêm animation trên slides — tuy nhiên CSS-only autoplay khó điều chỉnh khi có radio control. Giữ simple & accessible.
+       ========================= -->
+</body>
+</html>
